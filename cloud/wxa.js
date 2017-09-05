@@ -3,6 +3,14 @@ const AV = require('leanengine');
 const axios = require('axios');
 const { wxpay, wxapi } = require('../libs/wxapi');
 const { requireValidate } = require('../libs/utils');
+const ffmpeg = require('ffmpeg');
+
+var fs = require("fs");
+var url = require('url');
+var crypto = require('crypto');
+var request = require('request');
+var exec = require('child_process').exec;
+var http = require('http');
 
 /**
  * 生成小程序二维码
@@ -15,46 +23,50 @@ const { requireValidate } = require('../libs/utils');
  */
 AV.Cloud.define('getwxacode', function (request, response) {
     const params = request.params;
+    const requireParams = ['type'];
     let url;
-    if (typeof params.type === 'undefined') {
-        return response.error(new Error('请输入生成二维码类型'));
-    }
 
     switch (params.type) {
         case 1:
             url = 'https://api.weixin.qq.com/wxa/getwxacode';
+            requireParams.push('path');
             if (typeof params.path === 'undefined') { return response.error(new Error('请输入path')); }
             break;
         case 2:
             url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit';
-            if (typeof params.page === 'undefined') { return response.error(new Error('请输入page')); }
+            requireParams.push('page');
+            requireParams.push('scene');
             break;
         case 3:
             url = 'https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode';
-            if (typeof params.path === 'undefined') { return response.error(new Error('请输入path')); }
+            requireParams.push('path');
             break;
     }
-    wxapi.getLatestToken(function (err, accessToken) {
-        // 获取小程序码
-        axios.post(url, params, {
-            params: {
-                access_token: accessToken.accessToken,
-                dataType: 'JSON',
-            },
-            responseType: 'arraybuffer'
-        }).then((res) => {
-            // 将二维码存储起来
-            if (typeof res.data === 'undefined') {
-                return response.error('生成二维码失败');
-            } else {
-                const imageFile = new AV.File('file-qrcode.png', res.data);
-                imageFile.save().then((res) => {
-                    return response.success(res);
-                }, (error) => {
-                    return response.error(err);
-                });
-            }
+    requireValidate(params, requireParams).then(params => {
+        wxapi.getLatestToken(function (err, accessToken) {
+            // 获取小程序码
+            axios.post(url, params, {
+                params: {
+                    access_token: accessToken.accessToken,
+                    dataType: 'JSON',
+                },
+                responseType: 'arraybuffer'
+            }).then((res) => {
+                // 将二维码存储起来
+                if (typeof res.data === 'undefined') {
+                    return response.error('生成二维码失败');
+                } else {
+                    const imageFile = new AV.File('file-qrcode.png', res.data);
+                    imageFile.save().then((res) => {
+                        return response.success(res);
+                    }, (error) => {
+                        return response.error(err);
+                    });
+                }
+            });
         });
+    }).catch(err => {
+        return response.error(err);
     });
 })
 
@@ -68,9 +80,9 @@ AV.Cloud.define('sendTpl', function (request, response) {
         .then(params => {
             wxapi.sendWxappTpl(params, (err, data, res) => {
                 if (err) {
-                    response.error(err);
+                    return response.error(err);
                 } else {
-                    response.success(res);
+                    return response.success(res);
                 }
             });
         })
