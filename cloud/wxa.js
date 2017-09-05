@@ -21,12 +21,15 @@ AV.Cloud.define('getwxacode', function (request, response) {
     switch (params.type) {
         case 1:
             url = 'https://api.weixin.qq.com/wxa/getwxacode';
+            if (typeof params.path === 'undefined') { return response.error(new Error('请输入path')); }
             break;
         case 2:
             url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit';
+            if (typeof params.page === 'undefined') { return response.error(new Error('请输入page')); }
             break;
         case 3:
             url = 'https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode';
+            if (typeof params.path === 'undefined') { return response.error(new Error('请输入path')); }
             break;
     }
     wxapi.getLatestToken(function (err, accessToken) {
