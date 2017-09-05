@@ -1,6 +1,8 @@
+// 小程序相关的云函数
 const AV = require('leanengine');
 const axios = require('axios');
 const { wxpay, wxapi } = require('../libs/wxapi');
+const { requireValidate } = require('../libs/utils');
 
 /**
  * 生成小程序二维码
@@ -54,4 +56,26 @@ AV.Cloud.define('getwxacode', function (request, response) {
             }
         });
     });
+})
+
+/**
+ * 发送模版信息
+ * https://mp.weixin.qq.com/debug/wxadoc/dev/api/notice.html#发送模板消息
+ */
+AV.Cloud.define('sendTpl', function (request, response) {
+    const params = request.params;
+    requireValidate(params, ['touser', 'template_id', 'form_id', 'data'])
+        .then(params => {
+            wxapi.sendWxappTpl(params, (err, data, res) => {
+                if (err) {
+                    response.error(err);
+                } else {
+                    response.success(res);
+                }
+            });
+        })
+        .catch(err => {
+            return response.error(err);
+        });
+
 })

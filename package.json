@@ -24,6 +24,7 @@
     "ejs": "2.3.1",
     "express": "4.12.3",
     "leanengine": "git+https://github.com/leancloud/leanengine-node-sdk.git#v2",
+    "lodash": "^4.17.4",
     "uuid": "^3.0.1",
     "wechat-api": "^1.35.1",
     "weixin-pay": "^1.1.7"
