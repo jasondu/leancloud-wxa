@@ -1,4 +1,4 @@
-const wxpay = require('./wxpay');
+const { wxpay } = require('./wxapi');
 
 const validateSign = results => {
   const sign = wxpay.sign(results);

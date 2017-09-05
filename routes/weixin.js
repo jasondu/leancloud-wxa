@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const AV = require('leanengine');
-const Order = require('../order');
-const wxpay = require('../wxpay');
-const { validateSign } = require('../utils');
+const Order = require('../model/order');
+const { wxpay } = require('../libs/wxapi');
+const { validateSign } = require('../libs/utils');
 
 const format = '___-_-_ _:_:__';
 const formatTime = time => 

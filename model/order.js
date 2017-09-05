@@ -1,9 +1,9 @@
 const AV = require('leanengine');
-const wxpay = require('./wxpay');
+const { wxpay } = require('../libs/wxapi');
 const {
   validateSign,
   handleError,
-} = require('./utils');
+} = require('../libs/utils');
 
 class Order extends AV.Object {
   get tradeId() { return this.get('tradeId'); }
