@@ -30,7 +30,6 @@ AV.Cloud.define('getwxacode', function (request, response) {
         case 1:
             url = 'https://api.weixin.qq.com/wxa/getwxacode';
             requireParams.push('path');
-            if (typeof params.path === 'undefined') { return response.error(new Error('请输入path')); }
             break;
         case 2:
             url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit';
