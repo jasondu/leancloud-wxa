@@ -3,14 +3,6 @@ const AV = require('leanengine');
 const axios = require('axios');
 const { wxpay, wxapi } = require('../libs/wxapi');
 const { requireValidate } = require('../libs/utils');
-const ffmpeg = require('ffmpeg');
-
-var fs = require("fs");
-var url = require('url');
-var crypto = require('crypto');
-var request = require('request');
-var exec = require('child_process').exec;
-var http = require('http');
 
 /**
  * 生成小程序二维码
