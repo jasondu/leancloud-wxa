@@ -33,9 +33,11 @@ AV.Cloud.define('getwxacode', function (request, response) {
             requireParams.push('path');
             break;
     }
+    // 1. 入参验证
     requireValidate(params, requireParams).then(params => {
-        wxapi.getLatestToken(function (err, accessToken) {
-            // 获取小程序码
+        // 2. 获取accessToken
+        wxapi.getLatestToken((err, accessToken) => {
+            // 3. 调用二维码生成接口获取二维码二进制流
             axios.post(url, params, {
                 params: {
                     access_token: accessToken.accessToken,
@@ -43,7 +45,7 @@ AV.Cloud.define('getwxacode', function (request, response) {
                 },
                 responseType: 'arraybuffer'
             }).then((res) => {
-                // 将二维码存储起来
+                // 4. 保存二维码到leancloud
                 if (typeof res.data === 'undefined') {
                     return response.error('生成二维码失败');
                 } else {
