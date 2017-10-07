@@ -12,6 +12,12 @@ const formatTime = time =>
             .map((value, index) => value + format[index])
             .join('').replace(/_/g, '')
     );
+const accMultiply = function (arg1, arg2) {
+    var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+    try { m += s1.split(".")[1].length } catch (e) { }
+    try { m += s2.split(".")[1].length } catch (e) { }
+    return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+}
 
 // 微信支付成功通知
 router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
@@ -33,65 +39,65 @@ router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
         if (order.status === 'SUCCESS') return;
 
         // 通知商家
-        new AV.Query('User').equalTo('objectId', order.get('store').get('user').id).first().then(user => {
-            const storeId = order.get('store').id;
-            const openid = 'oFU2Z0zETJHWlAQ7GnLm0OivkzVI';
-            console.log('gz_openid:' + openid);
-            // 获取订单内容
-            let orderCon = [];
-            let query = new AV.Query('OrderCon');
-            query.equalTo('order', order).include('menu').find().then((foods) => {
-                foods.forEach(function (foodItem) {
-                    orderCon.push(foodItem.get('menu').get('name') + 'X' + foodItem.get('num'));
-                }, this);
-                // 发送通知
-                const templateId = 'I2_89qfWoZu-lunqqNRN1IdcSPojoSBQ-pAv4bEe_Vc';
-                const url = '';
-                const data = {
-                    "first": {
-                        "value": "您有一份新订单",
-                        "color": "#173177"
-                    },
-                    "keyword1": {
-                        "value": orderCon.join(','),
-                        "color": "#173177"
-                    },
-                    "keyword2": {
-                        "value": accMultiply(order.get('amount'), 0.01) + "元",
-                        "color": "#173177"
-                    },
-                    "keyword3": {
-                        "value": user.get('nickName'),
-                        "color": "#173177"
-                    },
-                    "keyword4": {
-                        "value": "微信支付",
-                        "color": "#173177"
-                    },
-                    "keyword5": {
-                        "value": "无",  // 备注信息
-                        "color": "#173177"
-                    },
-                    "remark": {
-                        "value": "",
-                        "color": "#173177"
-                    }
-                };
-                let jsonInfo = {
-                    touser: openid,
-                    template_id: templateId,
-                    url: url,
-                    miniprogram: {
-                        appid: process.env.WEIXIN_APPID,
-                        pagepath: '/pages/order/index?id=' + storeId
-                    },
-                    data: data
+        console.log('===========');
+        console.log('通知商家');
+        const storeId = order.get('store').id;
+        const openid = 'oFU2Z0zETJHWlAQ7GnLm0OivkzVI';
+        console.log('gz_openid:' + openid);
+        // 获取订单内容
+        let orderCon = [];
+        let query = new AV.Query('OrderCon');
+        query.equalTo('order', order).include('menu').find().then((foods) => {
+            foods.forEach(function (foodItem) {
+                orderCon.push(foodItem.get('menu').get('name') + 'X' + foodItem.get('num'));
+            }, this);
+            // 发送通知
+            const templateId = 'I2_89qfWoZu-lunqqNRN1IdcSPojoSBQ-pAv4bEe_Vc';
+            const url = '';
+            const data = {
+                "first": {
+                    "value": "您有一份新订单",
+                    "color": "#173177"
+                },
+                "keyword1": {
+                    "value": orderCon.join(','),
+                    "color": "#173177"
+                },
+                "keyword2": {
+                    "value": accMultiply(order.get('amount'), 0.01) + "元",
+                    "color": "#173177"
+                },
+                "keyword3": {
+                    "value": '',
+                    "color": "#173177"
+                },
+                "keyword4": {
+                    "value": "微信支付",
+                    "color": "#173177"
+                },
+                "keyword5": {
+                    "value": "无",  // 备注信息
+                    "color": "#173177"
+                },
+                "remark": {
+                    "value": "",
+                    "color": "#173177"
                 }
-                gzwxapi.sendGzTpl(jsonInfo, function (err, data, res) {
-                    // response.success(res);
-                });
+            };
+            let jsonInfo = {
+                touser: openid,
+                template_id: templateId,
+                url: url,
+                miniprogram: {
+                    appid: 'wx637a3fa923864f90',
+                    pagepath: '/pages/order/index?id=' + storeId
+                },
+                data: data
+            }
+            gzwxapi.sendGzTpl(jsonInfo, function (err, data, res) {
+                // response.success(res);
             });
-        })
+        });
 
         return order.save({
             status: result_code,
