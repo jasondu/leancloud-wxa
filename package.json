@@ -30,9 +30,15 @@
     "weixin-pay": "^1.1.7"
   },
   "devDependencies": {
+    "cz-conventional-changelog": "^2.0.0",
     "nodemon": "^1.11.0"
   },
   "engines": {
     "node": "6.x"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
