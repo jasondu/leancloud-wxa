@@ -68,7 +68,7 @@ router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
                     "color": "#173177"
                 },
                 "keyword3": {
-                    "value": '',
+                    "value": order.get('username'),
                     "color": "#173177"
                 },
                 "keyword4": {
@@ -76,11 +76,11 @@ router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
                     "color": "#173177"
                 },
                 "keyword5": {
-                    "value": "无",  // 备注信息
+                    "value": order.get('address'),  // 备注信息
                     "color": "#173177"
                 },
                 "remark": {
-                    "value": "",
+                    "value": !order.get('username') ? '堂食' : '外卖',
                     "color": "#173177"
                 }
             };
