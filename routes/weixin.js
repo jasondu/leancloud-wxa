@@ -6,31 +6,32 @@ const { validateSign } = require('../libs/utils');
 const gzwxapi = require('../libs/gzwxapi');
 
 const format = '___-_-_ _:_:__';
-const formatTime = time => 
-  new Date(
-    time.split('')
-      .map((value, index) => value + format[index])
-      .join('').replace(/_/g, '')
+const formatTime = time =>
+    new Date(
+        time.split('')
+            .map((value, index) => value + format[index])
+            .join('').replace(/_/g, '')
     );
 
 // 微信支付成功通知
 router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
-  // 处理商户业务逻辑
-  validateSign(msg);
-  const {
+    // 处理商户业务逻辑
+    validateSign(msg);
+    const {
     result_code,
-    err_code,
-    err_code_des,
-    out_trade_no,
-    time_end,
-    transaction_id,
-    bank_type,
+        err_code,
+        err_code_des,
+        out_trade_no,
+        time_end,
+        transaction_id,
+        bank_type,
   } = msg;
-  new AV.Query(Order).equalTo('tradeId', out_trade_no).first({
-    useMasterKey: true,
-  }).then(order => {
-    if (!order) throw new Error(`找不到订单${out_trade_no}`);
-    if (order.status === 'SUCCESS') {
+    new AV.Query(Order).equalTo('tradeId', out_trade_no).first({
+        useMasterKey: true,
+    }).then(order => {
+        if (!order) throw new Error(`找不到订单${out_trade_no}`);
+        if (order.status === 'SUCCESS') return;
+
         // 通知商家
         new AV.Query('User').equalTo('objectId', order.get('store').get('user').id).first().then(user => {
             const storeId = order.get('store').id;
@@ -91,22 +92,20 @@ router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
                 });
             });
         })
-        return;
-    };
-    
-    return order.save({
-      status: result_code,
-      errorCode: err_code,
-      errorCodeDes: err_code_des,
-      paidAt: formatTime(time_end),
-      transactionId: transaction_id,
-      bankType: bank_type,
-    }, {
-      useMasterKey: true,
-    });
-  }).then(() => {
-    res.success();
-  }).catch(error => res.fail(error.message));
+
+        return order.save({
+            status: result_code,
+            errorCode: err_code,
+            errorCodeDes: err_code_des,
+            paidAt: formatTime(time_end),
+            transactionId: transaction_id,
+            bankType: bank_type,
+        }, {
+                useMasterKey: true,
+            });
+    }).then(() => {
+        res.success();
+    }).catch(error => res.fail(error.message));
 }));
 
 module.exports = router;
