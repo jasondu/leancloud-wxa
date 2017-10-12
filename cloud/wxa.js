@@ -3,6 +3,8 @@ const AV = require('leanengine');
 const axios = require('axios');
 const { wxpay, wxapi } = require('../libs/wxapi');
 const { requireValidate } = require('../libs/utils');
+const WXBizDataCrypt = require('../libs/WXBizDataCrypt');
+const request = require('request');
 
 /**
  * 生成小程序二维码
@@ -83,4 +85,18 @@ AV.Cloud.define('sendTpl', function (request, response) {
             return response.error(err);
         });
 
+})
+
+/**
+ * 语音识别
+ */
+AV.Cloud.define('yysb', function (req, res) {
+    const { url } = req.params;
+    request('http://123.207.119.31/qcloud?url=' + url, function (err, data, body) {
+        if (err) {
+            return res.error(JSON.stringify(data.statusCode));
+        } else {
+            return res.success(data);
+        }
+    });
 })
