@@ -36,7 +36,7 @@ AV.Cloud.define('order', (request, response) => {
     order.tradeType = 'JSAPI';
     const acl = new AV.ACL();
     // 只有创建订单的用户可以读，没有人可以写
-    acl.setPublicReadAccess(false);
+    acl.setPublicReadAccess(true);
     acl.setPublicWriteAccess(false);
     acl.setReadAccess(user, true);
     acl.setWriteAccess(user, false);
