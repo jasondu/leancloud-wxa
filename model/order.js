@@ -32,6 +32,9 @@ class Order extends AV.Object {
 
   get userId() { return this.get('userId'); }
   set userId(value) { this.set('userId', value); }
+
+  get changId() { return this.get('changId'); }
+  set changId(value) { this.set('changId', value); }
   
   place() {
     return new Promise((resolve, reject) => {

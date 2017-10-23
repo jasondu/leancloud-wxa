@@ -16,7 +16,7 @@ AV.Cloud.define('order', (request, response) => {
         return response.error(new Error('当前用户不是小程序用户'));
     }
 
-    const { userId, price } = request.params;
+    const { userId, price, changId } = request.params;
 
     const order = new Order();
     order.tradeId = uuid().replace(/-/g, '');
@@ -27,7 +27,8 @@ AV.Cloud.define('order', (request, response) => {
     order.ip = request.meta.remoteAddress;
 
     order.userId = userId;
-    
+    order.changId = changId;
+
     if (!(order.ip && /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(order.ip))) {
         order.ip = '127.0.0.1';
     }
