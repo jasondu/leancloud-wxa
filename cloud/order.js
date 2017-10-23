@@ -26,8 +26,8 @@ AV.Cloud.define('order', (request, response) => {
     order.amount = price * 100;
     order.ip = request.meta.remoteAddress;
 
-    order.userId = userId;
-    order.changId = changId;
+    order.userId = AV.Object.createWithoutData('Player', userId);
+    order.changId = AV.Object.createWithoutData('Chang', changId);;
 
     if (!(order.ip && /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(order.ip))) {
         order.ip = '127.0.0.1';
