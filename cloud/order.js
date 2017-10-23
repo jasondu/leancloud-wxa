@@ -2,6 +2,7 @@ const uuid = require('uuid/v4');
 const AV = require('leanengine');
 const Order = require('../model/order');
 const { wxpay, wxapi } = require('../libs/wxapi');
+const { mul } = require('../libs/utils');
 
 /** 
  * 小程序创建订单
@@ -23,7 +24,7 @@ AV.Cloud.define('order', (request, response) => {
     order.status = 'INIT';
     order.user = request.currentUser;
     order.productDescription = 'LeanCloud-小程序支付测试';
-    order.amount = price * 100;
+    order.amount = mul(price, 100);
     order.ip = request.meta.remoteAddress;
 
     order.userId = userId;
