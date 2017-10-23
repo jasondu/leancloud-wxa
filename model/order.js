@@ -29,6 +29,9 @@ class Order extends AV.Object {
 
   get prepayId() { return this.get('prepayId'); }
   set prepayId(value) { this.set('prepayId', value); }
+
+  get userId() { return this.get('userId'); }
+  set userId(value) { this.set('userId', value); }
   
   place() {
     return new Promise((resolve, reject) => {

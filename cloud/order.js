@@ -25,6 +25,9 @@ AV.Cloud.define('order', (request, response) => {
     order.productDescription = 'LeanCloud-小程序支付测试';
     order.amount = price * 100;
     order.ip = request.meta.remoteAddress;
+
+    order.userId = userId;
+    
     if (!(order.ip && /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(order.ip))) {
         order.ip = '127.0.0.1';
     }
