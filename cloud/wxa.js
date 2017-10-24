@@ -95,16 +95,6 @@ AV.Cloud.define('redpack', function (request, response) {
         spbill_create_ip: request.meta.remoteAddress
       }, function (err, result) {
         if (result.result_code == 'SUCCESS') {
-            var Bill = AV.Object.extend('Bill');
-            var bill = new Bill();
-            bill.set('type', -1);
-            bill.set('store', store);
-            bill.set('money', total);
-            bill.set('order', null);
-            bill.set('remark', '提现');
-            bill.save().then(function (todo) {
-            }, function (error) {
-            });
             response.success(result);
           } else {
             response.error(result.err_code_des);
