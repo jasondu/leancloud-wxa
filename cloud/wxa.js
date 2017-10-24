@@ -1,8 +1,8 @@
 // 小程序相关的云函数
 const AV = require('leanengine');
 const axios = require('axios');
-const { wxpay, wxapi, redpack } = require('../libs/wxapi');
-const { requireValidate } = require('../libs/utils');
+const { wxpay, wxapi } = require('../libs/wxapi');
+const { requireValidate, mul } = require('../libs/utils');
 
 /**
  * 生成小程序二维码
@@ -87,18 +87,27 @@ AV.Cloud.define('sendTpl', function (request, response) {
 
 // 发红包
 AV.Cloud.define('redpack', function (request, response) {
-    redpack.send({
-        mch_billno: '123426900220150325' + Math.random().toString().substr(2, 10),
-        send_name: '红包来自',
-        wishing: '收好不谢！',
-        re_openid: 'o0mga0WxBMGPF8ANZd6YsLU2qsL0',
-        total_amount: 100,
-        total_num: 1,
-        client_ip: request.meta.remoteAddress,
-        nick_name: 'XXXX',
-        act_name: '发测试红包',
-        remark: 'remark'
-    }, function (err, result) {
-        response.success(result);
-    })
+    wxpay.createEnterprisePay({
+        openid: 'o0mga0WxBMGPF8ANZd6YsLU2qsL0',
+        desc: '中奖红包',
+        partner_trade_no: '123426900220150325' + Math.random().toString().substr(2, 10),
+        amount: mul(1, 100),
+        spbill_create_ip: request.meta.remoteAddress
+      }, function (err, result) {
+        if (result.result_code == 'SUCCESS') {
+            var Bill = AV.Object.extend('Bill');
+            var bill = new Bill();
+            bill.set('type', -1);
+            bill.set('store', store);
+            bill.set('money', total);
+            bill.set('order', null);
+            bill.set('remark', '提现');
+            bill.save().then(function (todo) {
+            }, function (error) {
+            });
+            response.success(result);
+          } else {
+            response.error(result.err_code_des);
+          }
+      });
 });
