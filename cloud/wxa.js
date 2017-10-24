@@ -1,7 +1,7 @@
 // 小程序相关的云函数
 const AV = require('leanengine');
 const axios = require('axios');
-const { wxpay, wxapi } = require('../libs/wxapi');
+const { wxpay, wxapi, redpack } = require('../libs/wxapi');
 const { requireValidate } = require('../libs/utils');
 
 /**
@@ -84,3 +84,21 @@ AV.Cloud.define('sendTpl', function (request, response) {
         });
 
 })
+
+// 发红包
+AV.Cloud.define('redpack', function (request, response) {
+    redpack.send({
+        mch_billno: '123426900220150325' + Math.random().toString().substr(2, 10),
+        send_name: '红包来自',
+        wishing: '收好不谢！',
+        re_openid: 'o0mga0WxBMGPF8ANZd6YsLU2qsL0',
+        total_amount: 100,
+        total_num: 1,
+        client_ip: request.meta.remoteAddress,
+        nick_name: 'XXXX',
+        act_name: '发测试红包',
+        remark: 'remark'
+    }, function (err, result) {
+        response.success(result);
+    })
+});
