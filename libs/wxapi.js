@@ -1,5 +1,6 @@
 const WXPay = require('weixin-pay');        // 微信支付API
 const WechatAPI = require('wechat-api');    // 微信公众号API
+const WXPay2 = require('node-wxpay');        // 微信支付API
 const fs = require('fs');
 
 if (!process.env.WEIXIN_APPID) throw new Error('请到【云引擎-设置-自定义环境变量】添加 WEIXIN_APPID');
@@ -15,6 +16,12 @@ const wxpay = WXPay({
     // pfx: fs.readFileSync('./cert/apiclient_cert.p12'),  //微信商户平台证书，暂不需要
 });
 
+const wxpay2 = WXPay2({
+    appid: process.env.WEIXIN_APPID,
+    mch_id: process.env.WEIXIN_MCHID,
+    partner_key: process.env.WEIXIN_PAY_SECRET,
+    pfx: fs.readFileSync('./cert/apiclient_cert.p12'),
+});
 
 const wxapi = new WechatAPI(process.env.WEIXIN_APPID, process.env.WEIXIN_SECRET);
 WechatAPI.patch("sendWxappTpl", "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send");
@@ -23,4 +30,5 @@ WechatAPI.patch("getwxacode", "https://api.weixin.qq.com/wxa/getwxacode");
 module.exports = {
     wxpay,
     wxapi,
+    wxpay2
 };
