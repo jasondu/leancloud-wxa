@@ -92,7 +92,7 @@ AV.Cloud.define('redpack', function (request, response) {
     wxpay2.createEnterprisePay({
         // openid: 'o0mga0WxBMGPF8ANZd6YsLU2qsL0',
         openid: id,
-        desc: '中奖红包',
+        desc: '纪成赢-中奖红包',
         partner_trade_no: '123426900220150325' + Math.random().toString().substr(2, 10),
         amount: mul(money, 100),
         spbill_create_ip: request.meta.remoteAddress
