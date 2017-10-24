@@ -87,11 +87,14 @@ AV.Cloud.define('sendTpl', function (request, response) {
 
 // 发红包
 AV.Cloud.define('redpack', function (request, response) {
+    const {id, money} = request.params;
+    money = parseFloat(money);
     wxpay2.createEnterprisePay({
-        openid: 'o0mga0WxBMGPF8ANZd6YsLU2qsL0',
+        // openid: 'o0mga0WxBMGPF8ANZd6YsLU2qsL0',
+        openid: id,
         desc: '中奖红包',
         partner_trade_no: '123426900220150325' + Math.random().toString().substr(2, 10),
-        amount: mul(1, 100),
+        amount: mul(money, 100),
         spbill_create_ip: request.meta.remoteAddress
       }, function (err, result) {
         if (result.result_code == 'SUCCESS') {
