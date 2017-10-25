@@ -23,7 +23,7 @@ AV.Cloud.define('order', (request, response) => {
     order.tradeId = uuid().replace(/-/g, '');
     order.status = 'INIT';
     order.user = request.currentUser;
-    order.productDescription = 'LeanCloud-小程序支付测试';
+    order.productDescription = '黑科技桌球赛【前端大宝剑提供技术支持】';
     order.amount = mul(price, 100);
     order.ip = request.meta.remoteAddress;
 
