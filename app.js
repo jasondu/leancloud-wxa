@@ -37,7 +37,7 @@ app.use('/weixin', weixin);
 
 app.use('/qcloud', qcloud);
 
-app.get('/MP_verify_8Y86QgB78DfvOipm.txt', function (req, res) {
+app.get('/RtXMmt5w54.txt', function (req, res) {
     res.render('test');
 });
 
