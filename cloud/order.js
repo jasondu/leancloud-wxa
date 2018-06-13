@@ -32,13 +32,21 @@ AV.Cloud.define('order', (request, response) => {
     let price = 0;
     let productArr = [];
     for (let i = 0; i < con.length; i++) {
-        price += con[i].price * con[i].num;
-        let menu = AV.Object.createWithoutData('Menu', con[i].food_id);
+        const item = con[i];
+        price += mul(item.price, item.num);
         let orderCon = new AV.Object('OrderCon');
+        let menu = AV.Object.createWithoutData('Menu', item.food_id);
+        if (item.sku_id !== 0) {
+            let sku = AV.Object.createWithoutData('Sku', item.sku_id);
+            orderCon.set('sku', sku);
+        }
         orderCon.set('menu', menu);
-        orderCon.set('num', con[i].num);
-        orderCon.set('price', con[i].price);
-        orderCon.set('order', order);
+        orderCon.set('info', {
+            menu: item.menu,
+            sku: item.sku,
+        })
+        orderCon.set('num', item.num);
+        orderCon.set('price', item.price);
         productArr.push(orderCon);
     }
     const query = new AV.Query('Store');
@@ -49,7 +57,8 @@ AV.Cloud.define('order', (request, response) => {
         const store = data[0];
         order.store = store;
         order.productDescription = store.get('name');
-        order.con = con;
+        order.con = productArr;
+        price += store.get('disPrice') || 0;    // 添加运费
         order.amount = mul(price, 100);
         order.ip = request.meta.remoteAddress;
         if (!(order.ip && /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(order.ip))) {
