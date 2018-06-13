@@ -82,6 +82,7 @@ AV.Cloud.define('order', (request, response) => {
             signType: 'MD5',
             nonceStr: String(Math.random()),
         }
+        console.log('payload: ', payload);
         payload.paySign = wxpay.sign(payload);
         response.success(payload);
     }).catch(error => {
