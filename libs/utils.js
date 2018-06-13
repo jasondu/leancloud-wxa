@@ -13,6 +13,7 @@ const validateSign = results => {
 
 const handleError = results => {
   if (results.return_code === 'FAIL') {
+      console.error('handleError: ', results);
     throw new Error(results.return_msg);
   }
   if (results.result_code !== 'SUCCESS') {
