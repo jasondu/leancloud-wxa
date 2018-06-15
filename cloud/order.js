@@ -78,6 +78,7 @@ AV.Cloud.define('order', (request, response) => {
         console.log('step3');
         return order.place();
     }).then(() => {
+        console.log('step4');
         console.log(`预订单创建成功：订单号 [${order.tradeId}] prepayId [${order.prepayId}]`);
         const payload = {
             appId: process.env.WEIXIN_APPID,
@@ -90,6 +91,7 @@ AV.Cloud.define('order', (request, response) => {
         payload.paySign = wxpay.sign(payload);
         response.success(payload);
     }).catch(error => {
+        console.log('step5');
         console.error(error);
         response.error(error);
     });
