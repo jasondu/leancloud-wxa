@@ -69,12 +69,12 @@ AV.Cloud.define('order', (request, response) => {
         console.log('step1');
         const acl = new AV.ACL();
         // 只有创建订单的用户可以读，没有人可以写
-        acl.setPublicReadAccess(false);
-        acl.setPublicWriteAccess(false);
-        acl.setReadAccess(user, true);
-        acl.setWriteAccess(user, false);
-        console.log('step2');
-        order.setACL(acl);
+        // acl.setPublicReadAccess(false);
+        // acl.setPublicWriteAccess(false);
+        // acl.setReadAccess(user, true);
+        // acl.setWriteAccess(user, false);
+        // console.log('step2');
+        // order.setACL(acl);
         console.log('step3');
         return order.place();
     }).then(() => {
