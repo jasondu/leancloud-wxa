@@ -54,6 +54,7 @@ AV.Cloud.define('order', (request, response) => {
         query.get(storeId),
         AV.Object.saveAll(productArr),
     ]).then((data) => {
+        console.log('order Data: ', order);
         const store = data[0];
         order.store = store;
         order.productDescription = store.get('name');
