@@ -73,6 +73,7 @@ AV.Cloud.define('order', (request, response) => {
         acl.setReadAccess(user, true);
         acl.setWriteAccess(user, false);
         order.setACL(acl);
+        console.log('order.place');
         return order.place();
     }).then(() => {
         console.log(`预订单创建成功：订单号 [${order.tradeId}] prepayId [${order.prepayId}]`);
