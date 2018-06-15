@@ -66,14 +66,16 @@ AV.Cloud.define('order', (request, response) => {
             order.ip = '127.0.0.1';
         }
         order.tradeType = 'JSAPI';
+        console.log('step1');
         const acl = new AV.ACL();
         // 只有创建订单的用户可以读，没有人可以写
         acl.setPublicReadAccess(false);
         acl.setPublicWriteAccess(false);
         acl.setReadAccess(user, true);
         acl.setWriteAccess(user, false);
+        console.log('step2');
         order.setACL(acl);
-        console.log('order.place');
+        console.log('step3');
         return order.place();
     }).then(() => {
         console.log(`预订单创建成功：订单号 [${order.tradeId}] prepayId [${order.prepayId}]`);
