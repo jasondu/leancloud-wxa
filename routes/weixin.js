@@ -91,7 +91,7 @@ router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
                 url: url,
                 miniprogram: {
                     appid: 'wx637a3fa923864f90',
-                    pagepath: '/pages/order/index?id=' + storeId
+                    pagepath: '/pages/order/list/list?id=' + storeId
                 },
                 data: data
             }
