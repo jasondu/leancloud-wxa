@@ -42,8 +42,8 @@ router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
         console.log('===========');
         console.log('通知商家');
         const storeId = order.get('store').id;
-        // const openid = 'oFU2Z0w6P5w_8v_xZfHZmptNtzbU';
-        const openid = 'oFU2Z0zETJHWlAQ7GnLm0OivkzVI';
+        const openid = 'oFU2Z0w6P5w_8v_xZfHZmptNtzbU';
+        // const openid = 'oFU2Z0zETJHWlAQ7GnLm0OivkzVI';
         console.log('gz_openid:' + openid);
         // 获取订单内容
         let orderCon = [];
