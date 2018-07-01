@@ -69,7 +69,7 @@ router.post('/pay-callback', wxpay.useWXCallback((msg, req, res, next) => {
                     "color": "#173177"
                 },
                 "keyword3": {
-                    "value": order.get('username'),
+                    "value": order.get('username') + ' 手机：' + order.get('userphone'),
                     "color": "#173177"
                 },
                 "keyword4": {
